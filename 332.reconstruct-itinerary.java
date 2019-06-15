@@ -54,13 +54,6 @@ class Solution {
           return itinerary;
         }
 
-        // Bulid the map from departure to destination
-        Map<String, List<String>> itineraryMap = new HashMap<>();
-        for (List<String> ticket : tickets) {
-            itineraryMap.putIfAbsent(ticket.get(0), new LinkedList<>());
-            itineraryMap.get(ticket.get(0)).add(ticket.get(1));
-        }
-
         // Try DFS and find out the correct path
         findPath(tickets, "JFK", itinerary);
         return itinerary;
