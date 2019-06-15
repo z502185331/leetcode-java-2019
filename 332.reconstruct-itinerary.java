@@ -48,47 +48,31 @@
  */
 class Solution {
     public List<String> findItinerary(List<List<String>> tickets) {
-        List<String> itinerary = new ArrayList<>();
+        LinkedList<String> itinerary = new LinkedList<>();
 
         if (tickets.size() == 0) {
           return itinerary;
         }
 
+        Map<String, PriorityQueue<String>> map = new HashMap<>();
+
+        for (List<String> ticket : tickets) {
+          map.putIfAbsent(ticket.get(0), new PriorityQueue<>());
+          map.get(ticket.get(0)).offer(ticket.get(1));
+        }
+
         // Try DFS and find out the correct path
-        findPath(tickets, "JFK", itinerary);
+        findPath(map, "JFK", itinerary);
         return itinerary;
     }
 
-    private boolean findPath(List<List<String>> tickets, String cur, List<String> itinerary) {
-        itinerary.add(cur);
-        if (tickets.size() == 0) {
-            return true;
+    private void findPath(Map<String, PriorityQueue<String>> map, String cur, LinkedList<String> itinerary) {
+        PriorityQueue<String> destinations = map.get(cur);
+
+        while (destinations != null && !destinations.isEmpty()) {
+          findPath(map, destinations.poll(), itinerary);
         }
 
-        List<List<String>> destinations = new ArrayList<>();
-
-        for (List<String> ticket : tickets) {
-            if (!cur.equals(ticket.get(0))) {
-                continue;
-            }
-
-            destinations.add(ticket);
-        }
-
-        Collections.sort(destinations, (t1, t2) -> t1.get(1).compareTo(t2.get(1)));
-
-        // System.out.println("Arrived at " + cur + " and itinerary " + itinerary);
-
-        for (List<String> ticket : destinations) {
-            tickets.remove(ticket);
-            if (findPath(tickets, ticket.get(1), itinerary)) {
-                return true;
-            }
-
-            tickets.add(ticket);
-        }
-
-        itinerary.remove(itinerary.size() - 1);
-        return false;
+        itinerary.addFirst(cur);
     }
 }
