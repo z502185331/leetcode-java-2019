@@ -59,17 +59,18 @@
  */
  public class NestedIterator implements Iterator<Integer> {
 
-     private Iterator<Integer> iter;
-     private NestedInteger cur;
-     private int index;
+     private Iterator<NestedInteger> iter;
+     private List<NestedInteger> integerList;
 
      public NestedIterator(List<NestedInteger> nestedList) {
-         this.iter = flattenNestedList(nestedList).iterator();
+         this.integerList = new LinkedList<>();
+         flattenNestedList(nestedList);
+         this.iter = integerList.iterator();
      }
 
      @Override
      public Integer next() {
-         return iter.next();
+         return iter.next().getInteger();
      }
 
      @Override
@@ -77,16 +78,14 @@
          return iter.hasNext();
      }
 
-     private List<Integer> flattenNestedList(List<NestedInteger> nestedList) {
-         List<Integer> res = new ArrayList<>();
+     private void flattenNestedList(List<NestedInteger> nestedList) {
          for (NestedInteger i : nestedList) {
              if (!i.isInteger()) {
-                 res.addAll(flattenNestedList(i.getList()));
+                 flattenNestedList(i.getList());
              } else {
-                 res.add(i.getInteger());
+                 integerList.add(i);
              }
          }
-         return res;
      }
  }
 
