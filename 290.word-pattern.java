@@ -46,32 +46,62 @@
  *
  */
  class Solution {
-     public boolean wordPattern(String pattern, String str) {
-         String[] subStr = str.split(" ");
 
-         if (pattern.length() != subStr.length) {
-             return false;
-         }
+    /**
+    public boolean wordPattern(String pattern, String str) {
+        String[] subStr = str.split(" ");
 
-         Map<Character, String> mapping = new HashMap<>();
-         Map<String, Character> reverseMapping = new HashMap<>();
+        if (pattern.length() != subStr.length) {
+            return false;
+        }
 
-         for (int i = 0; i < pattern.length(); i++) {
-             char c = pattern.charAt(i);
-             String s = subStr[i];
+        Map<Character, String> mapping = new HashMap<>();
+        Map<String, Character> reverseMapping = new HashMap<>();
 
-             if (mapping.containsKey(c) && !mapping.get(c).equals(s)) {
-                 return false;
-             }
+        for (int i = 0; i < pattern.length(); i++) {
+            char c = pattern.charAt(i);
+            String s = subStr[i];
 
-             if (reverseMapping.containsKey(s) && reverseMapping.get(s) != c) {
-                 return false;
-             }
+            if (mapping.containsKey(c) && !mapping.get(c).equals(s)) {
+                return false;
+            }
 
-             mapping.put(c, s);
-             reverseMapping.put(s, c);
-         }
+            if (reverseMapping.containsKey(s) && reverseMapping.get(s) != c) {
+                return false;
+            }
 
-         return true;
-     }
- }
+            mapping.put(c, s);
+            reverseMapping.put(s, c);
+        }
+
+        return true;
+    }
+    */
+
+    public boolean wordPattern(String pattern, String str) {
+        String[] subStr = str.split(" ");
+
+        if (pattern.length() != subStr.length) {
+            return false;
+        }
+
+        Map<Character, String> mapping = new HashMap<>();
+
+        for (int i = 0; i < pattern.length(); i++) {
+            char c = pattern.charAt(i);
+            String s = subStr[i];
+
+            if (mapping.containsKey(c) && !mapping.get(c).equals(s)) {
+                return false;
+            }
+
+            if (!mapping.containsKey(c) && mapping.containsValue(s)) {
+                return false;
+            }
+
+            mapping.put(c, s);
+        }
+
+        return true;
+    }
+}
