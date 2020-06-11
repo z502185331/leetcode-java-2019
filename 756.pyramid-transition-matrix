@@ -1,0 +1,54 @@
+class Solution {
+    
+    public boolean pyramidTransition(String bottom, List<String> allowed) {
+        Map<String, List<Character>> allowedMap = parse(allowed);
+        return canBuild(bottom, 0, "", allowedMap);
+    }
+    
+    private boolean canBuild(String bottom, int start, String top, Map<String, List<Character>> allowed) {
+        if (bottom.length() == 1) {
+            return true;
+        }
+        
+        String targetBase = bottom.substring(start, start + 2);
+        if (!allowed.containsKey(targetBase)) {
+            return false;
+        }
+        
+        for (char c : allowed.get(targetBase)) {
+            String targetTop = top + c;
+            if (targetTop.length() >= 2 && !allowed.containsKey(targetTop.substring(targetTop.length() - 2))) {
+                continue;
+            }
+            
+            if (start + 1 == bottom.length() - 1) {
+                if (canBuild(top + c, 0, "", allowed)) {
+                    return true;
+                }
+                continue;
+            }
+            
+            if (canBuild(bottom, start + 1, top + c, allowed)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    private Map<String, List<Character>> parse(List<String> allowed) {
+        Map<String, List<Character>> res = new HashMap<>();
+        for (String item : allowed) {
+            String base = item.substring(0, 2);
+            char c = item.charAt(2);
+            
+            if (!res.containsKey(base)) {
+                res.put(base, new ArrayList<>());
+            }
+            
+            res.get(base).add(c);
+        }
+        
+        return res;
+    }
+}
